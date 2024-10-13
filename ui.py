@@ -9,10 +9,21 @@ sym = st.text_input("Enter stock", "0005.HK")
 yfc = Yfc()
 symInfo=yfc.getInfo(sym)
 # (net profit * 1.022)/0.07/diluted shares
-netprofit=symInfo.income_stmt.loc['Net Income']
-dilutedshares=symInfo.income_stmt.loc['Diluted Average Shares']
+netprofitfull=symInfo.income_stmt.loc['Net Income']
+if (netprofitfull.iloc[0]==None):
+    netprofit=netprofitfull.iloc[1]
+else:
+    netprofit=netprofitfull.iloc[0]
+
+dilutedsharesfull=symInfo.income_stmt.loc['Diluted Average Shares']
+
+if (dilutedsharesfull.iloc[0]==None):
+    dilutedshares=dilutedsharesfull.iloc[1]
+else:
+    dilutedshares=dilutedsharesfull.iloc[0]
+
 st.write("Fair value based on prev net income")
-st.write(netprofit.iloc[0] * 1.04 / 0.07/dilutedshares.iloc[0])
+st.write(netprofit* 1.04 / 0.07/dilutedshares)
 
 st.write("Dividends", symInfo.dividends)
 #for key in symInfo.basic_info:
