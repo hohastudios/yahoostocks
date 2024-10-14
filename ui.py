@@ -24,11 +24,11 @@ else:
     dilutedshares=dilutedsharesfull.iloc[0]
 
 
-st.write("Fair value based on prev net income, and GG model")
+st.write("Fair value based on prev net income and GG model")
 st.write("Conservative lower band")
-st.write(netprofit* 1.04 / 0.07/dilutedshares)
+st.write(netprofit * 1.04 / 0.07 / dilutedshares)
 st.write("Aggressive upper band")
-st.write(netprofit* 1.04 / 0.05 /dilutedshares)
+st.write(netprofit * 1.04 / 0.05 / dilutedshares)
 
 st.write("Dividends", symInfo.dividends)
 #for key in symInfo.basic_info:
