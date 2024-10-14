@@ -26,7 +26,8 @@ else:
     dilutedshares=dilutedsharesfull.iloc[0]
 
 st.write("Fair value based on prev net income and GG model")
-st.write("Conservative lower band ", f"{netprofit}", " ")
+st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}")
+st.write("Conservative lower band ")
 st.write(netprofit * targetgrowth * y30yield / 0.07 / dilutedshares)
 st.write("Aggressive upper band")
 st.write(netprofit * targetgrowth * y30yield / 0.05 / dilutedshares)
@@ -41,8 +42,14 @@ st.write("Analyst Targets", symInfo.analyst_price_targets)
 
 st.write("Earning Estimates", symInfo.earnings_estimate)
 
-st.write("Earnings Dates", symInfo.earnings_dates)
+st.write("Balance Sheet", symInfo.balance_sheet)
 
+for key in symInfo.fast_info:
+    st.write(f"{key}" , " : ", symInfo.fast_info[key])
+#st.write("Earnings Dates", symInfo.earnings_dates)
+st.write("Recommendations", symInfo.recommendations_summary)
+st.write("Institutional Holders", symInfo.get_major_holders())
+st.write("Full Info", symInfo.get_info())
 
 st.write("Disclaimer: This site is purely for personal and educational use \
     Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of Yahoo, Inc. \
