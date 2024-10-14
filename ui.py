@@ -5,6 +5,14 @@ import math
 
 st.title("Yahoo Stocks Dashboard")
 
+st.write("Disclaimer: This site is purely for personal and educational use \
+    Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of Yahoo, Inc. \
+    This site is not affilited, endorsed or vetted by Yahoo, Inc.\
+    API is yfinance, and is not affiliated, endorsed, or vetted by Yahoo, Inc.\
+    It's an open-source tool that uses Yahoo's publicly available APIs, and is intended for research and educational purposes. \
+    You should refer to Yahoo!'s terms of use (here, here, and here) for details on your rights to use the actual data downloaded. \
+    Remember - the Yahoo! finance API is intended for personal use only.\
+    ")
 
 sym = st.text_input("Enter stock", "0005.HK")
 y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
