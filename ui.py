@@ -7,6 +7,8 @@ st.title("Yahoo Stocks Dashboard")
 
 
 sym = st.text_input("Enter stock", "0005.HK")
+y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
+targetgrowth=float(st.text_input("Custom target growth %", 0)) / 100 + 1
 yfc = Yfc()
 symInfo=yfc.getInfo(sym)
 # (net profit * 1.022)/0.07/diluted shares
@@ -23,22 +25,24 @@ if math.isnan(dilutedsharesfull.iloc[0]):
 else:
     dilutedshares=dilutedsharesfull.iloc[0]
 
-
 st.write("Fair value based on prev net income and GG model")
-st.write("Conservative lower band")
-st.write(netprofit * 1.04 / 0.07 / dilutedshares)
+st.write("Conservative lower band ", f"{netprofit}", " ")
+st.write(netprofit * targetgrowth * y30yield / 0.07 / dilutedshares)
 st.write("Aggressive upper band")
-st.write(netprofit * 1.04 / 0.05 / dilutedshares)
+st.write(netprofit * targetgrowth * y30yield / 0.05 / dilutedshares)
 
 st.write("Dividends", symInfo.dividends)
-#for key in symInfo.basic_info:
-#    st.write(key,symInfo.basic_info[key])
 
-#for key in symInfo.income_stmt.keys():
-#    st.write(key, symInfo.income_stmt[key]['Net Income'])
-#logger.info(f'{symInfo.income_stmt.keys()}')
-#st.dataframe(symInfo.income_stmt.get('2023-12-31 00:00:00'))
 st.write("Earnings", symInfo.income_stmt)
+
+st.write("Quaterly Earnings", symInfo.quarterly_financials)
+
+st.write("Analyst Targets", symInfo.analyst_price_targets)
+
+st.write("Earning Estimates", symInfo.earnings_estimate)
+
+st.write("Earnings Dates", symInfo.earnings_dates)
+
 
 st.write("Disclaimer: This site is purely for personal and educational use \
     Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of Yahoo, Inc. \
