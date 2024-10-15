@@ -33,12 +33,14 @@ if math.isnan(dilutedsharesfull.iloc[0]):
 else:
     dilutedshares=dilutedsharesfull.iloc[0]
 
+reportingCurrency=symInfo.get_info()['financialCurrency']
+
 st.write("Fair value based on prev net income and GG model")
-st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}")
+st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}", " ", f"{reportingCurrency}")
 st.write("Conservative lower band ")
-st.write(netprofit * targetgrowth * y30yield / 0.07 / dilutedshares)
+st.write(f"{netprofit * targetgrowth * y30yield / 0.07 / dilutedshares:,.2f} ", f"{reportingCurrency}")
 st.write("Aggressive upper band")
-st.write(netprofit * targetgrowth * y30yield / 0.05 / dilutedshares)
+st.write(f"{netprofit * targetgrowth * y30yield / 0.05 / dilutedshares:,.2f} ", f"{reportingCurrency}")
 
 st.write("Dividends", symInfo.dividends)
 
