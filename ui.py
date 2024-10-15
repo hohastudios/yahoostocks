@@ -4,7 +4,22 @@ from loguru import logger
 import math
 from menu import menu
 
+
+def storeSymbol(symbol):
+    st.session_state['symbol']=symbol
+
+def storeIndustry(industry):
+    st.session_state['industry']=industry
+
 menu()
+
+#Initialize sessions variables 
+
+if 'symbol' not in st.session_state:
+    st.session_state['symbol'] = '0005.HK'
+if 'industry' not in st.session_state:
+    st.session_state['industry'] = 'value'
+
 st.title("Yahoo Stocks Dashboard")
 
 st.write("Disclaimer: This site is purely for personal and educational use \
@@ -16,11 +31,14 @@ st.write("Disclaimer: This site is purely for personal and educational use \
     Remember - the Yahoo! finance API is intended for personal use only.\
     ")
 
-sym = st.text_input("Enter stock", "0005.HK")
+sym = st.text_input("Enter stock", st.session_state['symbol'])
+storeSymbol(sym)
+st.write(st.session_state['symbol'])
 y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
 targetgrowth=float(st.text_input("Custom target growth %", 0)) / 100 + 1
 yfc = Yfc()
 symInfo=yfc.getInfo(sym)
+storeIndustry(symInfo.get_info()['industryKey'])
 # (net profit * 1.022)/0.07/diluted shares
 netprofitfull=symInfo.income_stmt.loc['Net Income']
 if math.isnan(netprofitfull.iloc[0]):

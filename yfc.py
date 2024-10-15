@@ -6,5 +6,10 @@ class Yfc():
         pass
 
     def getInfo(self, sym):
-        ticker = yf.Ticker(sym)
-        return ticker
+        return yf.Ticker(sym)
+    
+    def getIndustry(self, industry):
+        return yf.Industry(industry)
+    
+    def getSector(self, sector):
+        return yf.Sector(sector)
