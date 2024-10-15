@@ -2,7 +2,9 @@ import streamlit as st
 from yfc import Yfc
 from loguru import logger 
 import math
+from menu import menu
 
+menu()
 st.title("Yahoo Stocks Dashboard")
 
 st.write("Disclaimer: This site is purely for personal and educational use \
