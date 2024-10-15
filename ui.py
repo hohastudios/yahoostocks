@@ -18,7 +18,7 @@ menu()
 if 'symbol' not in st.session_state:
     st.session_state['symbol'] = '0005.HK'
 if 'industry' not in st.session_state:
-    st.session_state['industry'] = 'value'
+    st.session_state['industry'] = 'banks-diversified'
 
 st.title("Yahoo Stocks Dashboard")
 
@@ -38,7 +38,7 @@ y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
 targetgrowth=float(st.text_input("Custom target growth %", 0)) / 100 + 1
 yfc = Yfc()
 symInfo=yfc.getInfo(sym)
-storeIndustry(symInfo.get_info()['industryKey'])
+#storeIndustry(symInfo.get_info()['industryKey'])
 # (net profit * 1.022)/0.07/diluted shares
 netprofitfull=symInfo.income_stmt.loc['Net Income']
 if math.isnan(netprofitfull.iloc[0]):
