@@ -3,6 +3,7 @@ from yfc import Yfc
 from loguru import logger 
 import math
 from menu import menu
+import pandas as pd
 
 
 def storeSymbol(symbol):
@@ -57,29 +58,55 @@ reportingCurrency=symInfo.get_info()['financialCurrency']
 
 st.write("Fair value based on prev net income and GG model")
 st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}", " ", f"{reportingCurrency}")
-st.write("Conservative lower band ")
-st.write(f"{netprofit * targetgrowth * y30yield / 0.07 / dilutedshares:,.2f} ", f"{reportingCurrency}")
-st.write("Aggressive upper band")
-st.write(f"{netprofit * targetgrowth * y30yield / 0.05 / dilutedshares:,.2f} ", f"{reportingCurrency}")
 
-st.write("Dividends", symInfo.dividends)
+d = {'Conservative lower band' : [f"{netprofit * targetgrowth * y30yield / 0.07 / dilutedshares:,.2f} {reportingCurrency}"],
+     'Aggressive upper band' : [f"{netprofit * targetgrowth * y30yield / 0.05 / dilutedshares:,.2f} {reportingCurrency}"]}
 
-st.write("Earnings", symInfo.income_stmt)
-
-st.write("Quaterly Earnings", symInfo.quarterly_financials)
+df=pd.DataFrame(data=d)
+st.write(df)
 
 st.write("Analyst Targets", symInfo.analyst_price_targets)
 
+st.write("Dividends", symInfo.dividends[::-1])
+
+earnings_container_yearly = st.container()
+with earnings_container_yearly:
+    earnings_yearly, earnings_yearly_pct_change = st.columns(2)
+    with earnings_yearly:
+        st.write("Yearly Earnings", symInfo.get_financials(freq="yearly").loc['NetIncome']) 
+    with earnings_yearly_pct_change:
+        st.write("Yearly Earnings (% Chg)", symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1].pct_change()[::-1])
+
+earnings_container_quarterly = st.container()
+with earnings_container_quarterly:
+    earnings_quarterly, earnings_quarterly_pct_change = st.columns(2)
+    with earnings_quarterly:
+        st.write("Quarterly Earnings", symInfo.get_financials(freq="quarterly").loc['NetIncome'] )
+    with earnings_quarterly_pct_change:
+        st.write("Quarterly Earnings (% Chg)",symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1].pct_change()[::-1])
+
+with st.expander("See Breakdown"):
+    st.write("Earnings", symInfo.income_stmt)
+    st.write("Quarterly Earnings", symInfo.quarterly_financials)
+    st.write("Balance Sheet", symInfo.balance_sheet)
+
+st.write("Growth Estimates", symInfo.get_growth_estimates())
+
 st.write("Earning Estimates", symInfo.earnings_estimate)
 
-st.write("Balance Sheet", symInfo.balance_sheet)
 
-for key in symInfo.fast_info:
-    st.write(f"{key}" , " : ", symInfo.fast_info[key])
 #st.write("Earnings Dates", symInfo.earnings_dates)
 st.write("Recommendations", symInfo.recommendations_summary)
+with st.expander("See Calender"):
+    st.write(symInfo.get_calendar())
 st.write("Institutional Holders", symInfo.get_major_holders())
-st.write("Full Info", symInfo.get_info())
+
+with st.expander("See Fast Info"):
+    for key in symInfo.fast_info:
+        st.write(f"{key}" , " : ", symInfo.fast_info[key])
+
+with st.expander("See Full Info"):
+    st.write("Full Info", symInfo.get_info())
 
 st.write("Disclaimer: This site is purely for personal and educational use \
     Yahoo!, Y!Finance, and Yahoo! finance are registered trademarks of Yahoo, Inc. \
