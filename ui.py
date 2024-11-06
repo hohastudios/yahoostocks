@@ -6,8 +6,8 @@ from menu import menu
 import pandas as pd
 import json
 
-def storeSymbol(symbol):
-    st.session_state['symbol']=symbol
+def storeSymbol(sym):
+    st.session_state['symbol_input'] = sym
 
 def storeIndustry(industry):
     st.session_state['industry']=industry
@@ -16,8 +16,10 @@ menu()
 
 #Initialize sessions variables 
 
-if 'symbol' not in st.session_state:
+if ('symbol' not in st.session_state and 'state' not in st.session_state):
     st.session_state['symbol'] = '0005.HK'
+    st.session_state['state'] = 'first_initialised'
+
 if 'industry' not in st.session_state:
     st.session_state['industry'] = 'banks-diversified'
 
@@ -32,9 +34,18 @@ st.write("Disclaimer: This site is purely for personal and educational use \
     Remember - the Yahoo! finance API is intended for personal use only.\
     ")
 
-sym = st.text_input("Enter stock", st.session_state['symbol'])
-storeSymbol(sym)
-st.write(st.session_state['symbol'])
+
+if st.session_state['state'] == 'first_initialised':
+    sym = st.text_input("Enter stock", st.session_state.symbol, key='symbol_input')
+else:
+    if 'symbol_input' not in st.session_state:
+        st.session_state['symbol_input'] = '0005.HK'
+    sym = st.text_input("Enter stock", st.session_state.symbol_input, key='symbol_input')
+
+
+st.session_state['state']="refreshed"
+
+
 y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
 targetgrowth=float(st.text_input("Custom target growth %", 0)) / 100 + 1
 
@@ -43,13 +54,13 @@ symInfo=yfc.getInfo(sym)
 
 if 'debtToEquity' in symInfo.get_info().keys():
     debtToEquityVal=symInfo.get_info()['debtToEquity']
-    logger.info(debtToEquityVal)
+  
 else:
-    debtToEquityVal=0
+    debtToEquityVal=100
 
 debtToEquity=float(st.text_input("Debt To Equity Ratio", debtToEquityVal)) / 100
 
-#storeIndustry(symInfo.get_info()['industryKey'])
+storeIndustry(symInfo.get_info()['industryKey'])
 # (net profit * 1.022)/0.07/diluted shares
 netprofitfull=symInfo.income_stmt.loc['Net Income']
 if math.isnan(netprofitfull.iloc[0]):
