@@ -87,14 +87,17 @@ with earnings_container_yearly:
     with earnings_yearly_pct_change:
         st.write("Yearly Earnings (% Chg)", symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1].pct_change()[::-1])
 
-earnings_container_quarterly = st.container()
-with earnings_container_quarterly:
-    earnings_quarterly, earnings_quarterly_pct_change = st.columns(2)
-    with earnings_quarterly:
-        st.write("Quarterly Earnings", symInfo.get_financials(freq="quarterly").loc['NetIncome'] )
-    with earnings_quarterly_pct_change:
-        st.write("Quarterly Earnings (% Chg)",symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1].pct_change()[::-1])
-
+try:
+    earnings_container_quarterly = st.container()
+    with earnings_container_quarterly:
+        earnings_quarterly, earnings_quarterly_pct_change = st.columns(2)
+        with earnings_quarterly:
+            st.write("Quarterly Earnings", symInfo.get_financials(freq="quarterly").loc['NetIncome'] )
+        with earnings_quarterly_pct_change:
+            st.write("Quarterly Earnings (% Chg)",symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1].pct_change()[::-1])
+except Exception:
+    pass
+    
 with st.expander("See Breakdown"):
     st.write("Earnings", symInfo.income_stmt)
     st.write("Quarterly Earnings", symInfo.quarterly_financials)
