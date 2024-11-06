@@ -4,7 +4,7 @@ from loguru import logger
 import math
 from menu import menu
 import pandas as pd
-
+import json
 
 def storeSymbol(symbol):
     st.session_state['symbol']=symbol
@@ -37,8 +37,18 @@ storeSymbol(sym)
 st.write(st.session_state['symbol'])
 y30yield=float(st.text_input("30Y yields %", 4) ) / 100 +1
 targetgrowth=float(st.text_input("Custom target growth %", 0)) / 100 + 1
+
 yfc = Yfc()
 symInfo=yfc.getInfo(sym)
+
+if 'debtToEquity' in symInfo.get_info().keys():
+    debtToEquityVal=symInfo.get_info()['debtToEquity']
+    logger.info(debtToEquityVal)
+else:
+    debtToEquityVal=0
+
+debtToEquity=float(st.text_input("Debt To Equity Ratio", debtToEquityVal)) / 100
+
 #storeIndustry(symInfo.get_info()['industryKey'])
 # (net profit * 1.022)/0.07/diluted shares
 netprofitfull=symInfo.income_stmt.loc['Net Income']
@@ -59,8 +69,8 @@ reportingCurrency=symInfo.get_info()['financialCurrency']
 st.write("Fair value based on prev net income and GG model")
 st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}", " ", f"{reportingCurrency}")
 
-d = {'Conservative lower band' : [f"{netprofit * targetgrowth * y30yield / 0.07 / dilutedshares:,.2f} {reportingCurrency}"],
-     'Aggressive upper band' : [f"{netprofit * targetgrowth * y30yield / 0.05 / dilutedshares:,.2f} {reportingCurrency}"]}
+d = {'Conservative lower band' : [f"{netprofit * targetgrowth * y30yield * debtToEquity / 0.07 / dilutedshares:,.2f} {reportingCurrency}"],
+     'Aggressive upper band' : [f"{netprofit * targetgrowth * y30yield * debtToEquity  / 0.05 / dilutedshares:,.2f} {reportingCurrency}"]}
 
 df=pd.DataFrame(data=d)
 st.write(df)
