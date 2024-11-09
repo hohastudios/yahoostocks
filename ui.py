@@ -53,7 +53,7 @@ yfc = Yfc()
 symInfo=yfc.getInfo(sym)
 
 if 'debtToEquity' in symInfo.get_info().keys():
-    debtToEquityVal=symInfo.get_info()['debtToEquity']
+    debtToEquityVal=100-(symInfo.get_info()['debtToEquity'])
   
 else:
     debtToEquityVal=100
