@@ -58,7 +58,7 @@ if 'debtToEquity' in symInfo.get_info().keys():
 else:
     debtToEquityVal=100
 
-debtToEquity=float(st.text_input("Debt To Equity Ratio", debtToEquityVal)) / 100
+debtToEquity=float(st.text_input("Propotion in Equity", debtToEquityVal)) / 100
 
 storeIndustry(symInfo.get_info()['industryKey'])
 # (net profit * 1.022)/0.07/diluted shares
