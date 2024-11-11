@@ -3,6 +3,7 @@ from yfc import Yfc
 from loguru import logger 
 import math
 from menu import menu
+import numpy as np
 import pandas as pd
 import json
 
@@ -96,7 +97,11 @@ with earnings_container_yearly:
     with earnings_yearly:
         st.write("Yearly Earnings", symInfo.get_financials(freq="yearly").loc['NetIncome']) 
     with earnings_yearly_pct_change:
-        st.write("Yearly Earnings (% Chg)", symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1].pct_change()[::-1])
+        d=symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1]
+        df=pd.DataFrame(data=d)
+        s= (df['NetIncome'].shift(-1) - df['NetIncome']).abs() / np.abs(df['NetIncome']) * 100
+        st.write("Yearly Earnings (% Chg)",s.shift(1)[::-1]) 
+        #st.write("Yearly Earnings (% Chg)", (symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1].pct_change()*100)[::-1])
 
 try:
     earnings_container_quarterly = st.container()
@@ -105,7 +110,10 @@ try:
         with earnings_quarterly:
             st.write("Quarterly Earnings", symInfo.get_financials(freq="quarterly").loc['NetIncome'] )
         with earnings_quarterly_pct_change:
-            st.write("Quarterly Earnings (% Chg)",symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1].pct_change()[::-1])
+            d=symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1]
+            df=pd.DataFrame(data=d)
+            s= (df['NetIncome'].shift(-1, fill_value=0) - df['NetIncome']).abs() / np.abs(df['NetIncome']) * 100
+            st.write("Quarterly Earnings (% Chg)",s.shift(1)[::-1])
 except Exception:
     pass
     
