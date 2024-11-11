@@ -95,12 +95,14 @@ earnings_container_yearly = st.container()
 with earnings_container_yearly:
     earnings_yearly, earnings_yearly_pct_change = st.columns(2)
     with earnings_yearly:
-        st.write("Yearly Earnings", symInfo.get_financials(freq="yearly").loc['NetIncome']) 
+        st.write("Yearly Earnings") 
+        st.dataframe(symInfo.get_financials(freq="yearly").loc['NetIncome'],use_container_width=True)
     with earnings_yearly_pct_change:
         d=symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1]
         df=pd.DataFrame(data=d)
         s= (df['NetIncome'].shift(-1) - df['NetIncome']).abs() / np.abs(df['NetIncome']) * 100
-        st.write("Yearly Earnings (% Chg)",s.shift(1)[::-1]) 
+        st.write("Yearly Earnings (% Chg)")
+        st.dataframe(s.shift(1)[::-1],use_container_width=True)
         #st.write("Yearly Earnings (% Chg)", (symInfo.get_financials(freq="yearly").loc['NetIncome'][::-1].pct_change()*100)[::-1])
 
 try:
@@ -108,12 +110,14 @@ try:
     with earnings_container_quarterly:
         earnings_quarterly, earnings_quarterly_pct_change = st.columns(2)
         with earnings_quarterly:
-            st.write("Quarterly Earnings", symInfo.get_financials(freq="quarterly").loc['NetIncome'] )
+            st.write("Quarterly Earnings")
+            st.dataframe(symInfo.get_financials(freq="quarterly").loc['NetIncome'], use_container_width=True)
         with earnings_quarterly_pct_change:
             d=symInfo.get_financials(freq="quarterly").loc['NetIncome'][::-1]
             df=pd.DataFrame(data=d)
             s= (df['NetIncome'].shift(-1, fill_value=0) - df['NetIncome']).abs() / np.abs(df['NetIncome']) * 100
-            st.write("Quarterly Earnings (% Chg)",s.shift(1)[::-1])
+            st.write("Quarterly Earnings (% Chg)")
+            st.dataframe(s.shift(1)[::-1],use_container_width=True)
 except Exception:
     pass
     
