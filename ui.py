@@ -54,14 +54,15 @@ yfc = Yfc()
 symInfo=yfc.getInfo(sym)
 
 if 'debtToEquity' in symInfo.get_info().keys():
-    debtToEquityVal=symInfo.get_info()['debtToEquity']
+    debtToEquityVal=100-(symInfo.get_info()['debtToEquity'])
   
 else:
     debtToEquityVal=100
 
-debtToEquity=float(st.text_input("Debt To Equity Ratio", debtToEquityVal)) / 100
-
-storeIndustry(symInfo.get_info()['industryKey'])
+debtToEquity=float(st.text_input("Propotion in Equity", debtToEquityVal)) / 100
+if 'industryKey' in symInfo.get_info().keys():
+    storeIndustry(symInfo.get_info()['industryKey'])
+    
 # (net profit * 1.022)/0.07/diluted shares
 netprofitfull=symInfo.income_stmt.loc['Net Income']
 if math.isnan(netprofitfull.iloc[0]):
