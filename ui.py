@@ -77,13 +77,20 @@ if math.isnan(dilutedsharesfull.iloc[0]):
 else:
     dilutedshares=dilutedsharesfull.iloc[0]
 
+exchangeCurrency=symInfo.get_info()['currency']
 reportingCurrency=symInfo.get_info()['financialCurrency']
 
-st.write("Fair value based on prev net income and GG model")
-st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}", " ", f"{reportingCurrency}")
+exRate = 1.0
+if (exchangeCurrency != reportingCurrency):
+    yfcFx = Yfc()
+    currInfo=yfcFx.getInfo(reportingCurrency+exchangeCurrency+"=X")
+    exRate = currInfo.get_info()["previousClose"]
 
-d = {'Conservative lower band' : [f"{netprofit * targetgrowth * y30yield * debtToEquity / 0.07 / dilutedshares:,.2f} {reportingCurrency}"],
-     'Aggressive upper band' : [f"{netprofit * targetgrowth * y30yield * debtToEquity  / 0.05 / dilutedshares:,.2f} {reportingCurrency}"]}
+st.write("Fair value based on prev net income and GG model")
+st.write("Net Profit from Income Statement: " ,f"{netprofit:,.0f}", " ", f"{exchangeCurrency}")
+
+d = {'Conservative lower band' : [f"{netprofit * exRate * targetgrowth * y30yield * debtToEquity / 0.07 / dilutedshares:,.2f} {exchangeCurrency}"],
+     'Aggressive upper band' : [f"{netprofit * exRate * targetgrowth * y30yield * debtToEquity  / 0.05 / dilutedshares:,.2f} {exchangeCurrency}"]}
 
 df=pd.DataFrame(data=d)
 st.write(df)
@@ -127,9 +134,15 @@ with st.expander("See Breakdown"):
     st.write("Quarterly Earnings", symInfo.quarterly_financials)
     st.write("Balance Sheet", symInfo.balance_sheet)
 
-st.write("Growth Estimates", symInfo.get_growth_estimates())
+try:
+    st.write("Growth Estimates", symInfo.get_growth_estimates())
+except Exception:
+    pass
 
-st.write("Earning Estimates", symInfo.earnings_estimate)
+try:
+    st.write("Earning Estimates", symInfo.earnings_estimate)
+except Exception:
+    pass
 
 
 #st.write("Earnings Dates", symInfo.earnings_dates)
